@@ -66,3 +66,52 @@ function stopWorkTimer() {
         isWorkRunning: false,
     })
 }
+// start the timer for the break button manually
+startBreakBtn.addEventListener("click", () => {
+    chrome.storage.local.set({
+        isBreakRunning: true
+    })
+})
+
+//stop the break timer manually
+stopBreakBtn.addEventListener("click", () => {
+    chrome.storage.local.set({
+        isBreakRunning: false,
+    })
+})
+//reset the break timer to the default value
+resetBreakBtn.addEventListener("click", () => {
+    chrome.storage.local.set({
+        isBreakRunning: false,
+        breakTimer: 0
+    })
+})
+
+function updateBreakTimeDisplay() {
+    chrome.storage.local.get(["breakTimer"], (res) => {
+        const breakTime = document.getElementById("break-time"); // Grab the element we need
+        let totalSeconds = 60 * 15 - res.breakTimer; // Calculate the total seconds remaining
+
+        if (totalSeconds < 0) {
+            totalSeconds = 0; // Ensure the timer doesn't go below 00:00
+        }
+
+        const minutes = Math.floor(totalSeconds / 60); // Calculate the minutes
+        const seconds = totalSeconds % 60; // Calculate the seconds
+
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`; // Format minutes
+        const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`; // Format seconds
+
+        breakTime.textContent = `${formattedMinutes}:${formattedSeconds}`; // Display time
+        if (minutes === 0 && seconds === 0) {
+            stopBreakTimer();
+        }
+    })
+}
+
+function stopBreakTimer() {
+    chrome.storage.local.set({
+        breakTimer: 0,
+        isBreakRunning: false,
+    })
+}
