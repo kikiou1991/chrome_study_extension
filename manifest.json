@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Study and Break Time Tracker",
+    "version": "1.0.0",
+    "description": "Set up, then track study and break times",
+    "icons": {
+        "16": "icons.png",
+        "48": "icons.png",
+        "128": "icons.png"
+    },
+    "action": {
+        "default_icon": "icons.png",
+        "default_title": "Study Timer",
+        "default_popup": "popups/popup.html"
+    },
+    "permissions": ["storage","notifications","alarms"],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "options_page": "options/options.html"
+}
