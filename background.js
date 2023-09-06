@@ -6,14 +6,14 @@ chrome.alarms.create("workTimer", {
 //Listen for the work timer alarm and increment the timer if its running
 chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "workTimer") {
-        chrome.storage.local.get(["wrokTimer", "isWorkRunning"], res => {
+        chrome.storage.local.get(["workTimer", "isWorkRunning"], res => {
             if (res.isWorkRunning) {
                 let workTimer = res.workTimer + 1;
+                chrome.storage.local.set({
+                    workTimer
+                })
             }
-            chrome.storage.local.set({
-                workTimer
-            })
-        })
+        });
     }
 })
 

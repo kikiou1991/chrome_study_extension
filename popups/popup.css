@@ -1,0 +1,26 @@
+body {
+    height: 400px;
+    width: 300px;
+    background: #EEBA35;
+    font-family: 'Courier New', Courier, monospace;
+}
+.header {
+    display: flex;
+    justify-content: center;
+    height: 40px;
+}
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    
+}
+h2 {
+    font-size: 2em;
+}
+button {
+    background-color: #7D6B5D;
+    color:antiquewhite
+}
