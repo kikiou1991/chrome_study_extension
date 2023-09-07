@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Timer</title>
     <link rel="stylesheet" href="popup.css">
-    <title>Study and Break Tracker</title>
 </head>
 <body>
-    <h1>Rest and Study Tracker</h1>
-    <h2>Work Timer</h2>
-    <h1 id="work-time">00:00</h1>
-        <button id="start-btn">Start</button>
-        <button id="stop-btn">Stop</button>
-        <button id="reset-btn">Reset</button>
-    <h2>Rest Timer</h2>
-    <h1 id="break-time">00:00</h1>
-        <button id="break-start">Start</button>
-        <button id="break-stop">Stop</button>
-        <button id="break-reset">Reset</button>
+    <div class="header">
+        <img src="../badger.png" />
+    </div>
+        <div id="container">
+            <h2>Work Timer</h2>
+            <h1 id="time">00:00</h1>
+            <button id="start-btn">Start</button>
+            <button id="stop-btn">Stop</button>
+            <button id="reset-btn">Reset</button>
+
+            <h2>Break Timer</h2>
+            <h1 id="break">00:00</h1>
+            <button id="break-start">Start</button>
+            <button id="break-end">Stop</button>
+            <button id="break-reset">Reset</button>
+        </div>
+        
 </body>
 <script src="popup.js"></script>
 </html>

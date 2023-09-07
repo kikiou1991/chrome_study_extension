@@ -1,117 +1,127 @@
-//Work Timer Control Buttons
-const startBtn = document.getElementById("start-btn")
-const stopBtn = document.getElementById("stop-btn")
-const resetBtn = document.getElementById("reset-btn")
+// Work Timer Controls
+const startWorkTimerBtn = document.getElementById("start-btn");
+const stopWorkTimerBtn = document.getElementById("stop-btn");
+const resetWorkTimerBtn = document.getElementById("reset-btn");
 
-//Rest Timer Control Buttons
-
-const startBreakBtn = document.getElementById("break-start")
-const stopBreakBtn = document.getElementById("break-stop")
-const resetBreakBtn = document.getElementById("break-reset")
-
-//Event listener to start the timer when button is pressed
-
-startBtn.addEventListener("click", () => {
-    //set event to true
+// Break Timer Controls
+const startBreakTimerBtn = document.getElementById("break-start");
+const stopBreakTimerBtn = document.getElementById("break-end");
+const resetBreakTimerBtn = document.getElementById("break-reset");
+// Event listener to start the timer
+startWorkTimerBtn.addEventListener("click", () => {
     chrome.storage.local.set({
         isWorkRunning: true,
-    })
+    });
 });
-//Event listener to stop the timer
-stopBtn.addEventListener("click", () => {
+
+// Function to stop the work timer
+stopWorkTimerBtn.addEventListener("click", () => {
     chrome.storage.local.set({
         isWorkRunning: false,
-    })
-})
-
-//Event listener to reset the work timer
-resetBtn.addEventListener("click", () => {
-    chrome.storage.local.set({
-        workTimer: 0,
-        isWorkRunning: false
-    })
+    });
 });
 
-//Function to update the work timer display
+// Function to reset the work timer
+resetWorkTimerBtn.addEventListener("click", () => {
+    chrome.storage.local.set({
+        workTimer: 0,
+        isWorkRunning: false,
+    });
+});
 
+// Function to update the work timer display
 function updateWorkTimerDisplay() {
-    chrome.storage.local.get(["workTimer"], (res) => {
-        const workTime = document.getElementById("work-time"); // Grab the element we need
-        let totalSeconds = 60 - res.workTimer; // Calculate the total seconds remaining
+    chrome.storage.local.get(["workTimer", "timeOption"], (res) => {
+        const workTime = document.getElementById("time");
 
-        if (totalSeconds < 0) {
-            totalSeconds = 0; // Ensure the timer doesn't go below 00:00
-        }
+        const totalSeconds = res.timeOption * 60 - res.workTimer; // Calculate total seconds remaining
 
-        const minutes = Math.floor(totalSeconds / 60); // Calculate the minutes
-        const seconds = totalSeconds % 60; // Calculate the seconds
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
 
-        const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`; // Format minutes
-        const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`; // Format seconds
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
 
-        workTime.textContent = `${formattedMinutes}:${formattedSeconds}`; // Display time
+        workTime.textContent = `${formattedMinutes}:${formattedSeconds}`
+
         if (minutes === 0 && seconds === 0) {
+            // Reset the work timer to 60 seconds (01:00) before starting the break timer
+
             stopWorkTimer();
+            startBreakTimer();
         }
-    })
+    });
 }
 
+// Update the work timer display initially and on interval
 updateWorkTimerDisplay();
-setInterval(updateWorkTimerDisplay, 1000)// call the function we created and increment by one second
+setInterval(updateWorkTimerDisplay, 1000);
 
-//function to stop the timer when it reaches 00:00
+//function to stop the work timer and set it to 00:00
 function stopWorkTimer() {
     chrome.storage.local.set({
-        workTimer: 0,
-        isWorkRunning: false,
+        worktTimer: 0,
+        isWorkRunning: false
     })
 }
-// start the timer for the break button manually
-startBreakBtn.addEventListener("click", () => {
+
+
+// Function to start the break timer
+startBreakTimerBtn.addEventListener("click", () => {
     chrome.storage.local.set({
-        isBreakRunning: true
-    })
-})
+        isBreakRunning: true, // Use a different key for break timer
+    });
+});
 
-//stop the break timer manually
-stopBreakBtn.addEventListener("click", () => {
+// Function to stop the break timer
+stopBreakTimerBtn.addEventListener("click", () => {
     chrome.storage.local.set({
-        isBreakRunning: false,
-    })
-})
-//reset the break timer to the default value
-resetBreakBtn.addEventListener("click", () => {
+        isBreakRunning: false, // Use a different key for break timer
+    });
+});
+
+// Function to reset the break timer
+resetBreakTimerBtn.addEventListener("click", () => {
     chrome.storage.local.set({
-        isBreakRunning: false,
-        breakTimer: 0
-    })
-})
+        isBreakRunning: false, // Use a different key for break timer
+        breakTimer: 0, // Use a different key for break timer
+    });
+});
 
-function updateBreakTimeDisplay() {
-    chrome.storage.local.get(["breakTimer"], (res) => {
-        const breakTime = document.getElementById("break-time"); // Grab the element we need
-        let totalSeconds = 60 * 15 - res.breakTimer; // Calculate the total seconds remaining
+// Function to update the break timer display
+function updateBreakTimerDisplay() {
+    chrome.storage.local.get(["breakTimer", "breakOption"], (res) => {
+        const breakTime = document.getElementById("break");
+        const totalSeconds = res.breakOption * 60 - res.breakTimer; // Calculate total seconds remaining
 
-        if (totalSeconds < 0) {
-            totalSeconds = 0; // Ensure the timer doesn't go below 00:00
-        }
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
 
-        const minutes = Math.floor(totalSeconds / 60); // Calculate the minutes
-        const seconds = totalSeconds % 60; // Calculate the seconds
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
 
-        const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`; // Format minutes
-        const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`; // Format seconds
+        breakTime.textContent = `${formattedMinutes}:${formattedSeconds}`;
 
-        breakTime.textContent = `${formattedMinutes}:${formattedSeconds}`; // Display time
         if (minutes === 0 && seconds === 0) {
             stopBreakTimer();
         }
+    });
+}
+function startBreakTimer() {
+    chrome.storage.local.set({
+        isBreakRunning: true,
+
+    });
+}
+function stopBreakTimer() {
+    chrome.storage.local.set({
+        isBreakRunning: false,
+        breakTimer: 0,
+        workTimer: 0,
+        isWorkRunning: true,
     })
 }
 
-function stopBreakTimer() {
-    chrome.storage.local.set({
-        breakTimer: 0,
-        isBreakRunning: false,
-    })
-}
+// Update the break timer display initially and on interval
+updateBreakTimerDisplay();
+setInterval(updateBreakTimerDisplay, 1000);
